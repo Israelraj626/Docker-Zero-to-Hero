@@ -1,0 +1,112 @@
+import java.util.*;
+
+class Product {
+    int id;
+    String name;
+    double price;
+
+    Product(int id, String name, double price) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+    }
+}
+
+class CartItem {
+    Product product;
+    int quantity;
+
+    CartItem(Product product, int quantity) {
+        this.product = product;
+        this.quantity = quantity;
+    }
+}
+
+class ECommerceApp {
+    static List<Product> productList = new ArrayList<>();
+    static List<CartItem> cart = new ArrayList<>();
+
+    public static void main(String[] args) {
+        initProducts();
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\n1. View Products\n2. Add to Cart\n3. View Cart\n4. Checkout\n5. Exit");
+            System.out.print("Choose an option: ");
+            int option = scanner.nextInt();
+
+            switch (option) {
+                case 1:
+                    displayProducts();
+                    break;
+                case 2:
+                    addToCart(scanner);
+                    break;
+                case 3:
+                    viewCart();
+                    break;
+                case 4:
+                    checkout();
+                    return;
+                case 5:
+                    System.out.println("Thanks for visiting!");
+                    return;
+                default:
+                    System.out.println("Invalid option.");
+            }
+        }
+    }
+
+    static void initProducts() {
+        productList.add(new Product(1, "Laptop", 899.99));
+        productList.add(new Product(2, "Phone", 499.99));
+        productList.add(new Product(3, "Headphones", 79.99));
+    }
+
+    static void displayProducts() {
+        System.out.println("\nAvailable Products:");
+        for (Product p : productList) {
+            System.out.println(p.id + ". " + p.name + " - $" + p.price);
+        }
+    }
+
+    static void addToCart(Scanner scanner) {
+        System.out.print("Enter Product ID: ");
+        int id = scanner.nextInt();
+        Product selected = null;
+        for (Product p : productList) {
+            if (p.id == id) selected = p;
+        }
+
+        if (selected == null) {
+            System.out.println("Product not found.");
+            return;
+        }
+
+        System.out.print("Enter Quantity: ");
+        int qty = scanner.nextInt();
+        cart.add(new CartItem(selected, qty));
+        System.out.println(qty + " x " + selected.name + " added to cart.");
+    }
+
+    static void viewCart() {
+        if (cart.isEmpty()) {
+            System.out.println("Your cart is empty.");
+            return;
+        }
+        System.out.println("\nCart:");
+        double total = 0;
+        for (CartItem item : cart) {
+            double subtotal = item.quantity * item.product.price;
+            System.out.println(item.product.name + " x" + item.quantity + " - $" + subtotal);
+            total += subtotal;
+        }
+        System.out.println("Total: $" + total);
+    }
+
+    static void checkout() {
+        viewCart();
+        System.out.println("Checkout complete! Thank you for your purchase.");
+    }
+}
+
